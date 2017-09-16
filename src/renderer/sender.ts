@@ -6,9 +6,9 @@ export class RendererSender extends Sender {
     constructor( channel: string ) {
         super( channel );
     }
-    
-    send( msg: Message ) {
-        ipcRenderer.send( this.channel, msg );
+
+    protected send( channel: string, message: Message ) {
+        ipcRenderer.send( channel, message );
     }
 }
 

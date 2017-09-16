@@ -1,13 +1,21 @@
-import { BrowserWindow, ipcMain } from 'electron';
-import { Message } from '../common/message';
+import { BrowserWindow, ipcMain, webContents } from 'electron';
+import { Message, MessageEvent } from '../common/message';
 import { Sender } from '../common/sender';
 
 export class MainSender extends Sender {
-    constructor( private win: Electron.BrowserWindow, channel: string ) {
-        super(channel );
+    fromWindow( win: Electron.BrowserWindow, channel: string ) { 
+        return new MainSender( win.webContents, channel );
     }
     
-    send( msg: Message ) {
-        this.win.webContents.send( this.channel, msg );
+    fromMessageEvent( messageEvent: MessageEvent, channel: string ) {
+        return new MainSender( messageEvent.event.sender, channel );
+    }
+    
+    constructor( private sender: Electron.WebContents, channel: string ) {
+        super( channel );
+    }
+    
+    protected send( channel: string, msg: Message ) {
+        this.sender.send( channel, msg );
     }
 }

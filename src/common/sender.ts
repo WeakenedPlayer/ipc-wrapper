@@ -1,27 +1,30 @@
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { Message } from './message';
 
 export abstract class Sender {
     private senders: Observable<Message>[] = [];
-    private mergedObservable: Observable<Message> = null;
-    private subscription: Subscription = new Subscription();
-    constructor( protected readonly channel: string ) {}
-    
-    abstract send( message: Message );
-    
-    start() {
-        this.stop();
-        this.mergedObservable = Observable.merge( ...this.senders );
-        this.subscription = this.mergedObservable.map( msg => {
-            this.send( msg );
-        } ).subscribe();
+    private defaultSender: Subject<Message> = new Subject();
+    private subjectOfMessageObservable: BehaviorSubject<Observable<Message>>;
+    protected abstract send( channel: string, message: Message );
+
+    // channel: IPCのチャネル名
+    constructor( private readonly channel: string ) {
+        this.subjectOfMessageObservable = new BehaviorSubject( this.toObservable() );
     }
     
-    stop() {
-        if( !this.subscription.closed ) {
-            this.subscription.unsubscribe();
-            this.subscription = new Subscription();
-        }
+    get message$() {
+        return this.subjectOfMessageObservable
+               .flatMap( observable => observable )
+               .publish()
+               .refCount();
+    }
+    
+    private toObservable(): Observable<Message> {
+        return Observable.merge( ...this.senders, this.defaultSender ).map( msg => this.send( this.channel, msg ) );
+    }
+    
+    update() {
+        this.subjectOfMessageObservable.next( this.toObservable() );
     }
     
     addSender( type: string, sender: Observable<any> ) {
@@ -33,6 +36,6 @@ export abstract class Sender {
     }
     
     sendMessage( type: string, payload?: any ) {
-        this.send( new Message( type, payload) );
+        this.defaultSender.next( new Message( type, payload) );
     }
 }
