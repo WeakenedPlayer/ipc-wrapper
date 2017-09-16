@@ -17,8 +17,8 @@ export class TestClass {
         this.listener.start();
         
         this.sender = new MainSender( this.win, 'response' );
-        this.sender.sendMessage( 'result', 'ok' );
         this.sender.start();
+        this.sender.sendMessage( 'result', 'ok' );
     }
 }
 ```
