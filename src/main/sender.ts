@@ -11,4 +11,3 @@ export class MainSender extends Sender {
         this.win.webContents.send( this.channel, msg );
     }
 }
-
