@@ -12,13 +12,13 @@ export abstract class Sender {
         this.subjectOfMessageObservable = new BehaviorSubject( this.toObservable() );
     }
     
-    get message$() {
+    get message$(): Observable<Message> {
         return this.subjectOfMessageObservable
                .flatMap( observable => observable )
                .publish()
                .refCount();
     }
-    
+
     private toObservable(): Observable<Message> {
         return Observable.merge( ...this.senders, this.defaultSender ).map( msg => this.send( this.channel, msg ) );
     }
@@ -37,5 +37,11 @@ export abstract class Sender {
     
     sendMessage( type: string, payload?: any ) {
         this.defaultSender.next( new Message( type, payload) );
+    }
+
+    filterMessage<T>( type: string ): Observable<T> {
+        return this.message$
+        .filter( msg => msg.type === type )
+        .map( msg => msg.payload as T );
     }
 }
