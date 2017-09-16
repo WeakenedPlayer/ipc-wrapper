@@ -7,7 +7,7 @@ export class MainSender extends Sender {
         super(channel );
     }
     
-    protected send( msg: Message ) {
+    send( msg: Message ) {
         this.win.webContents.send( this.channel, msg );
     }
 }

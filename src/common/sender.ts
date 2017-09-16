@@ -8,7 +8,7 @@ export abstract class Sender {
     constructor( protected readonly channel: string ) {
     }
     
-    protected abstract send( message: Message );
+    abstract send( message: Message );
     
     start() {
         this.stop();
@@ -31,5 +31,9 @@ export abstract class Sender {
 
     removeAllSenders() {
         this.senders = [];
+    }
+    
+    sendMessage( type: string, payload: any ) {
+        this.send( new Message( type, payload) );
     }
 }
