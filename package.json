@@ -1,0 +1,25 @@
+{
+  "name": "ipc-wrapper",
+  "version": "0.0.1-beta",
+  "description": "Interface between main and renderer process.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WeakenedPlayer/ipc-wrapper.git"
+  },
+  "keywords": [
+    "node.js",
+    "electron",
+    "ipc"
+  ],
+  "author": "WeakenedPlayer",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^1.7.5",
+    "rxjs": "~5.4.0"
+  }
+}
