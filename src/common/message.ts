@@ -3,6 +3,8 @@ export class Message {
                  public readonly payload?: any ) {}
 }
 
-export class MessageEvent {
-    constructor( public readonly event: any, public readonly message: Message ) {}
+export class ReceivedMessage {
+    constructor( public readonly from: any,
+                 public readonly type: string,
+                 public readonly payload?: any) {}
 }

@@ -1,10 +1,10 @@
 import { EventEmitter } from 'events';
 import { Observable, Subscription } from 'rxjs';
-import { Message, MessageEvent } from './message';
+import { Message, ReceivedMessage } from './message';
 
 export abstract class Listener {
     private listeners: { [name:string]: ( event: any, paylaod: any ) => void } = {};
-    private ipcObservable: Observable<MessageEvent>;
+    private ipcObservable: Observable<ReceivedMessage>;
     private subscription: Subscription = null;
     
     get message$() { return this.ipcObservable; }
@@ -12,7 +12,7 @@ export abstract class Listener {
     constructor( ipc: EventEmitter, private readonly channel: string ) {
         this.ipcObservable = Observable.create( ( observer ) => {
             let listener = ( ( event:any, msg: Message ) => {
-                observer.next( new MessageEvent( event, msg ) );
+                observer.next( new ReceivedMessage( event, msg.type, msg.payload ) );
             } );
 
             // add listener

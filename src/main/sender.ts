@@ -1,5 +1,5 @@
 import { BrowserWindow, ipcMain, webContents } from 'electron';
-import { Message, MessageEvent } from '../common/message';
+import { Message, ReceivedMessage } from '../common/message';
 import { Sender } from '../common/sender';
 
 export class MainSender extends Sender {
@@ -7,8 +7,8 @@ export class MainSender extends Sender {
         return new MainSender( win.webContents, channel );
     }
     
-    fromMessageEvent( messageEvent: MessageEvent, channel: string ) {
-        return new MainSender( messageEvent.event.sender, channel );
+    fromMessageEvent( messageEvent: ReceivedMessage, channel: string ) {
+        return new MainSender( messageEvent.from.sender, channel );
     }
     
     constructor( private sender: Electron.WebContents, channel: string ) {
