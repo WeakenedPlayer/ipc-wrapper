@@ -5,8 +5,7 @@ export abstract class Sender {
     private senders: Observable<Message>[] = [];
     private mergedObservable: Observable<Message> = null;
     private subscription: Subscription = new Subscription();
-    constructor( protected readonly channel: string ) {
-    }
+    constructor( protected readonly channel: string ) {}
     
     abstract send( message: Message );
     
@@ -33,7 +32,7 @@ export abstract class Sender {
         this.senders = [];
     }
     
-    sendMessage( type: string, payload: any ) {
+    sendMessage( type: string, payload?: any ) {
         this.send( new Message( type, payload) );
     }
 }
