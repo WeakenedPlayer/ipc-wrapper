@@ -8,9 +8,15 @@ export abstract class Listener {
     private subscription: Subscription = null;
     
     get message$(): Observable<ReceivedMessage> { return this.ipcObservable; }
+    
+   
     filter( type: string ): Observable<ReceivedMessage> {
         return this.ipcObservable
         .filter( msg => ( msg.type === type ) )
+    }
+    
+    extract<T>( type: string ): Observable<T> {
+        return this.filter( type ).map( msg => msg.payload as T );
     }
     
     constructor( ipc: EventEmitter, private readonly channel: string ) {
