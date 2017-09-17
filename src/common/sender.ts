@@ -38,10 +38,4 @@ export abstract class Sender {
     sendMessage( type: string, payload?: any ) {
         this.defaultSender.next( new Message( type, payload) );
     }
-
-    filterMessage<T>( type: string ): Observable<T> {
-        return this.message$
-        .filter( msg => msg.type === type )
-        .map( msg => msg.payload as T );
-    }
 }

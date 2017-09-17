@@ -7,7 +7,11 @@ export abstract class Listener {
     private ipcObservable: Observable<ReceivedMessage>;
     private subscription: Subscription = null;
     
-    get message$() { return this.ipcObservable; }
+    get message$(): Observable<ReceivedMessage> { return this.ipcObservable; }
+    filter( type: string ): Observable<ReceivedMessage> {
+        return this.ipcObservable
+        .filter( msg => ( msg.type === type ) )
+    }
     
     constructor( ipc: EventEmitter, private readonly channel: string ) {
         this.ipcObservable = Observable.create( ( observer ) => {
